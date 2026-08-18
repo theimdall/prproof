@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+*.sh text eol=lf
+bin/prproof.js text eol=lf
+
+# Generated bundles: keep them byte-identical everywhere so the "dist is up to
+# date" check in CI means the same thing on every platform.
+dist/index.js -text
+report/dist/index.js -text
+dist/licenses.txt -text
+report/dist/licenses.txt -text

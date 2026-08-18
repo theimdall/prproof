@@ -1,0 +1,29 @@
+# The privileged half of PRProof, running against its own pull requests.
+#
+# It has a write-capable token, so it must never touch pull request content:
+# no head checkout, no npm install, no repository code from the fork. It reads
+# one JSON artifact and posts the report. See docs/fork-pull-requests.md.
+name: PRProof Report
+
+on:
+  workflow_run:
+    workflows: [PRProof]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  checks: write
+
+jobs:
+  report:
+    name: Report
+    runs-on: ubuntu-latest
+    steps:
+      # Checks out the default branch — trusted code — purely to get the
+      # action from this repository. Never the pull request head.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - uses: ./report

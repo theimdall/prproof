@@ -1,0 +1,6 @@
+dist
+report/dist
+lib
+coverage
+docs/examples
+package-lock.json

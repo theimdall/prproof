@@ -1,0 +1,71 @@
+name: Bug report
+description: PRProof did something wrong — a wrong verdict, a crash, or a misleading report.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A false positive or a false negative from a rule counts as a bug. Please do not report
+        suspected **security** issues here — see [SECURITY.md](../blob/main/SECURITY.md).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did PRProof report, and what did you expect instead?
+      placeholder: |
+        TEST002 fired on a pull request that only changed .github/workflows/ci.yml.
+        I expected it to be skipped, because no source files changed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: The PRProof report
+      description: Paste the comment, or the relevant part of it. Redact anything private.
+      render: markdown
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Your .prproof.yml
+      description: If you have one.
+      render: yaml
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Your workflow file
+      description: The job that runs PRProof, including its permissions block.
+      render: yaml
+
+  - type: input
+    id: version
+    attributes:
+      label: PRProof version
+      placeholder: v0.1.0, or the commit SHA you pinned
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options:
+        - checks (default)
+        - run
+        - CLI (prproof analyze)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pr-origin
+    attributes:
+      label: Where did the pull request come from?
+      options:
+        - A branch in the same repository
+        - A fork
+        - Not applicable
+    validations:
+      required: true

@@ -1,0 +1,71 @@
+name: New rule proposal
+description: Propose a check PRProof should run before a human reviews a pull request.
+labels: [rule proposal]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The bar for a rule is high on purpose: one noisy rule gets the whole report ignored.
+        These questions are the ones a rule has to survive.
+
+  - type: input
+    id: name
+    attributes:
+      label: The rule, in one sentence
+      placeholder: Warn when a pull request changes a file listed in CODEOWNERS without adding the owner as a reviewer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: What does it save a reviewer from?
+      description: Describe the moment where a human currently notices this by hand.
+    validations:
+      required: true
+
+  - type: textarea
+    id: signal
+    attributes:
+      label: What evidence does it use?
+      description: >-
+        Which data — the diff, the pull request metadata, the GitHub API — and what exact
+        condition makes it fire?
+      placeholder: |
+        Data: changed file paths + .github/CODEOWNERS from the base branch + requested reviewers.
+        Fires when: a changed path matches a CODEOWNERS pattern and none of that pattern's owners
+        is a requested reviewer or the author.
+    validations:
+      required: true
+
+  - type: textarea
+    id: false-positives
+    attributes:
+      label: When would it be wrong?
+      description: >-
+        The most important question here. Describe the pull requests where this rule fires but
+        should not, and how the design avoids them.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Proposed severity
+      options:
+        - INFO — worth knowing
+        - WARNING — worth mentioning in review
+        - HIGH — should probably be fixed first
+        - CRITICAL — the pull request is not reviewable
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: criteria
+    attributes:
+      label: Does it meet the bar?
+      options:
+        - label: Deterministic — no LLM, no heuristics that drift between runs
+        - label: Explainable — the report can say exactly why it fired
+        - label: Not a linter's job — it works at pull-request level, not line level
+        - label: Configurable off in one line, for repositories where it does not apply

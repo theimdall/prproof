@@ -1,0 +1,47 @@
+# PRProof analysing its own pull requests.
+#
+# This is the unprivileged half: it runs with a read-only token, and for pull
+# requests from forks it cannot comment. It uploads the report as an artifact
+# and prproof-report.yml posts it. See docs/fork-pull-requests.md.
+name: PRProof
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - id: build
+        run: npm run build
+        continue-on-error: true
+
+      - id: test
+        run: npm test
+        continue-on-error: true
+
+      - id: lint
+        run: npm run lint
+        continue-on-error: true
+
+      # Uses this checkout rather than a published tag, so a pull request that
+      # breaks PRProof is caught by PRProof.
+      - uses: ./
+        with:
+          build-result: ${{ steps.build.outcome }}
+          test-result: ${{ steps.test.outcome }}
+          lint-result: ${{ steps.lint.outcome }}
+          upload-report: true

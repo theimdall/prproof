@@ -1,0 +1,66 @@
+{
+  "name": "prproof",
+  "version": "0.1.0",
+  "description": "Evidence before merge. A deterministic pull request quality gate for GitHub.",
+  "keywords": [
+    "github-actions",
+    "pull-request",
+    "code-review",
+    "quality-gate",
+    "ci"
+  ],
+  "homepage": "https://github.com/theimdall/prproof#readme",
+  "bugs": "https://github.com/theimdall/prproof/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theimdall/prproof.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "prproof": "./bin/prproof.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.10.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "bundle": "node scripts/bundle.mjs",
+    "package": "npm run build && npm run bundle",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "demo": "node scripts/update-golden.mjs",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test"
+  },
+  "dependencies": {
+    "@actions/artifact": "^2.3.2",
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "picomatch": "^4.0.2",
+    "yaml": "^2.7.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^22.13.4",
+    "@types/picomatch": "^3.0.2",
+    "@vercel/ncc": "^0.38.3",
+    "@vitest/coverage-v8": "^3.0.5",
+    "eslint": "^9.20.0",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.5"
+  }
+}

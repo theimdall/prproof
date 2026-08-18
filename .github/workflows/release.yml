@@ -1,0 +1,45 @@
+# Moves the major version tag (v1) to a released commit, so that
+# `uses: theimdall/prproof@v1` keeps working across patch releases.
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Update the major version tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run verify
+      - run: npm run package
+
+      - name: Verify the committed bundle matches the tag
+        run: |
+          if [ -n "$(git status --porcelain dist report/dist)" ]; then
+            echo "::error::dist/ does not match the source at this tag."
+            exit 1
+          fi
+
+      - name: Move the major tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          major="${TAG%%.*}"
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git tag -fa "$major" -m "Update $major to $TAG"
+          git push origin "$major" --force

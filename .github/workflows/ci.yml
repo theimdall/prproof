@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run coverage
+
+  bundle:
+    name: Bundled actions are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run package
+
+      # JavaScript actions run from committed bundles, so a stale dist/ means
+      # the published action does not match this source tree.
+      - name: Check the committed bundle matches the source
+        run: |
+          if [ -n "$(git status --porcelain dist report/dist)" ]; then
+            echo "::error::dist/ is out of date. Run 'npm run package' and commit the result."
+            git --no-pager diff --stat dist report/dist
+            exit 1
+          fi
+
+  examples:
+    name: Example reports are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run demo
+
+      - name: Check docs/examples matches the current rules
+        run: |
+          if [ -n "$(git status --porcelain docs/examples)" ]; then
+            echo "::error::docs/examples is out of date. Run 'npm run demo' and commit the result."
+            git --no-pager diff -- docs/examples
+            exit 1
+          fi

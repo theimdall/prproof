@@ -1,0 +1,32 @@
+# PRProof analysing itself. Also the reference example.
+version: 1
+
+# The default: PRProof reads results that already exist rather than running
+# commands of its own. The workflow hands them in as step outcomes.
+mode: checks
+
+build:
+  required: true
+test:
+  required: true
+lint:
+  required: false
+
+limits:
+  max_changed_files: 30
+  max_changed_lines: 1500
+
+tests:
+  require_test_changes: true
+
+pull_request:
+  minimum_description_length: 50
+  require_issue_reference: false
+
+dependencies:
+  warn_on_change: true
+
+duplicate_detection:
+  enabled: true
+
+fail_on: [critical]

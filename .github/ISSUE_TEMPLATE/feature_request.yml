@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest a change to how PRProof works.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposing a **new rule**? Use the
+        [New rule proposal](https://github.com/theimdall/prproof/issues/new?template=new_rule.yml)
+        template instead — it asks the questions a rule needs answered.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What review time is being wasted, or what does PRProof get in the way of?
+      placeholder: |
+        On our monorepo, PR001 counts every file in the repository-wide diff, so any change that
+        touches two packages looks enormous.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like PRProof to do
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: Configuration, another action, doing it by hand.
+
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Does this fit what PRProof is?
+      description: PRProof is a deterministic pull-request triage gate, not a code reviewer.
+      options:
+        - label: It is deterministic — the same pull request always gives the same answer
+        - label: It needs no service beyond the GitHub API
+        - label: A maintainer can see why it fired, without reading PRProof source

@@ -1,0 +1,99 @@
+name: PRProof
+description: Evidence before merge — a deterministic pull request quality gate.
+author: PRProof contributors
+
+branding:
+  icon: check-square
+  color: blue
+
+inputs:
+  token:
+    description: >-
+      Token used to read the pull request. The default GITHUB_TOKEN is enough.
+      For pull requests from forks this token is read-only, which is why the
+      companion reporting workflow exists (see docs/fork-pull-requests.md).
+    required: false
+    default: ${{ github.token }}
+
+  config-path:
+    description: Path to the PRProof configuration file.
+    required: false
+    default: .prproof.yml
+
+  config-source:
+    description: >-
+      Where to read the configuration from: "base" (default, recommended) reads
+      it from the target branch so a pull request cannot change the rules it is
+      judged by; "head" reads it from the pull request.
+    required: false
+    default: base
+
+  mode:
+    description: >-
+      Override the configured mode. "checks" (default) reads build/test/lint
+      results that already exist; "run" makes PRProof execute the configured
+      commands itself. Leave empty to use .prproof.yml.
+    required: false
+    default: ''
+
+  build-result:
+    description: Outcome of the build step, e.g. ${{ steps.build.outcome }}.
+    required: false
+    default: ''
+
+  test-result:
+    description: Outcome of the test step, e.g. ${{ steps.test.outcome }}.
+    required: false
+    default: ''
+
+  lint-result:
+    description: Outcome of the lint step, e.g. ${{ steps.lint.outcome }}.
+    required: false
+    default: ''
+
+  comment:
+    description: >-
+      Post or update the PRProof comment on the pull request. Leave empty to use
+      .prproof.yml, which defaults to true.
+    required: false
+    default: ''
+
+  check-run:
+    description: >-
+      Publish a PRProof check run for the head commit. Leave empty to use
+      .prproof.yml, which defaults to true.
+    required: false
+    default: ''
+
+  fail-on:
+    description: >-
+      Comma-separated severities that make this step fail, e.g. "critical".
+      Use "none" to never fail. Leave empty to use .prproof.yml.
+    required: false
+    default: ''
+
+  upload-report:
+    description: Upload the JSON report as a workflow artifact.
+    required: false
+    default: 'true'
+
+  artifact-name:
+    description: Name of the report artifact.
+    required: false
+    default: prproof-report
+
+outputs:
+  score:
+    description: PRProof score, 0-100.
+  band:
+    description: EXCELLENT, GOOD, REVIEW REQUIRED or HIGH RISK.
+  failed:
+    description: '"true" when a check matching fail-on failed.'
+  report-path:
+    description: Path to the JSON report written by this run.
+  skipped:
+    description: '"true" when the pull request was skipped (draft).'
+
+runs:
+  using: node24
+  main: dist/index.js

@@ -1,0 +1,43 @@
+name: PRProof Report
+description: >-
+  Publishes a PRProof report produced by an unprivileged analysis run. Reads a
+  JSON artifact and writes a comment and a check run — it never checks out or
+  executes pull request code.
+author: PRProof contributors
+
+branding:
+  icon: message-square
+  color: blue
+
+inputs:
+  token:
+    description: Token with pull-requests:write and checks:write.
+    required: false
+    default: ${{ github.token }}
+
+  artifact-name:
+    description: Name of the report artifact to download from the triggering run.
+    required: false
+    default: prproof-report
+
+  comment:
+    description: Post or update the PRProof comment on the pull request.
+    required: false
+    default: 'true'
+
+  check-run:
+    description: Publish a PRProof check run for the head commit.
+    required: false
+    default: 'true'
+
+outputs:
+  score:
+    description: PRProof score, 0-100.
+  band:
+    description: EXCELLENT, GOOD, REVIEW REQUIRED or HIGH RISK.
+  failed:
+    description: '"true" when a check matching fail-on failed.'
+
+runs:
+  using: node24
+  main: dist/index.js
