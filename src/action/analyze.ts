@@ -301,4 +301,6 @@ export async function runAction(): Promise<void> {
   }
 }
 
-await runAction();
+// Not a top-level await: the action bundle is CommonJS, and runAction()
+// handles its own failures through core.setFailed.
+void runAction();

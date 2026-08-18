@@ -37,17 +37,23 @@ inputs:
     default: ''
 
   build-result:
-    description: Outcome of the build step, e.g. ${{ steps.build.outcome }}.
+    description: >-
+      Outcome of the build step. Pass the step outcome expression from your
+      workflow, for example steps.build.outcome wrapped in expression braces.
     required: false
     default: ''
 
   test-result:
-    description: Outcome of the test step, e.g. ${{ steps.test.outcome }}.
+    description: >-
+      Outcome of the test step. Pass the step outcome expression from your
+      workflow, for example steps.test.outcome wrapped in expression braces.
     required: false
     default: ''
 
   lint-result:
-    description: Outcome of the lint step, e.g. ${{ steps.lint.outcome }}.
+    description: >-
+      Outcome of the lint step. Pass the step outcome expression from your
+      workflow, for example steps.lint.outcome wrapped in expression braces.
     required: false
     default: ''
 

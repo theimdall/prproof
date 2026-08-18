@@ -7,5 +7,5 @@ bin/prproof.js text eol=lf
 # date" check in CI means the same thing on every platform.
 dist/index.js -text
 report/dist/index.js -text
-dist/licenses.txt -text
-report/dist/licenses.txt -text
+dist/index.js.LEGAL.txt -text
+report/dist/index.js.LEGAL.txt -text
