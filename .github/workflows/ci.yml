@@ -55,12 +55,25 @@ jobs:
       # JavaScript actions run from committed bundles, so a stale dist/ means
       # the published action does not match this source tree.
       - name: Check the committed bundle matches the source
+        id: bundle-check
         run: |
           if [ -n "$(git status --porcelain dist report/dist)" ]; then
             echo "::error::dist/ is out of date. Run 'npm run package' and commit the result."
             git --no-pager diff --stat dist report/dist
             exit 1
           fi
+
+      # Lets a contributor see what a Linux build produced when their own
+      # rebuild disagrees, instead of guessing at a five-megabyte diff.
+      - name: Upload the bundle built here
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-built-in-ci
+          path: |
+            dist/index.js
+            report/dist/index.js
+          retention-days: 3
 
   examples:
     name: Example reports are up to date
