@@ -7,6 +7,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-18
+
+### Added
+
+- **`limits.exclude`** — files that do not count towards `PR001` size and that `TEST002` does not
+  expect tests for. PRProof flagged its own first pull request as 528,529 lines changed, almost
+  all of it the committed action bundle; every repository that ships generated output would hit
+  the same thing.
+
+### Changed
+
+- **Lock files no longer count towards pull request size.** A dependency bump that rewrites four
+  thousand lines of `package-lock.json` is not a large pull request. Set `limits.exclude: []` to
+  restore the previous behaviour.
+- A documentation change that also refreshes a lock file is still documentation-only.
+
+Excluded files keep their identity everywhere else: `DEP001` still reports a changed lock file.
+
 ## [0.1.1] — 2026-08-18
 
 ### Fixed
@@ -57,6 +75,7 @@ First release.
 - **Documentation**: rules, scoring, configuration, security model, fork pull requests, CLI, and
   ten generated example reports.
 
-[Unreleased]: https://github.com/theimdall/prproof/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/theimdall/prproof/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/theimdall/prproof/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/theimdall/prproof/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/theimdall/prproof/releases/tag/v0.1.0

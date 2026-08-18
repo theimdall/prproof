@@ -59,7 +59,7 @@ jobs:
         run: npm test
         continue-on-error: true
 
-      - uses: theimdall/prproof@v0.1.1
+      - uses: theimdall/prproof@v0.2.0
         with:
           build-result: ${{ steps.build.outcome }}
           test-result: ${{ steps.test.outcome }}
@@ -87,7 +87,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - uses: theimdall/prproof/report@v0.1.1
+      - uses: theimdall/prproof/report@v0.2.0
 ```
 
 Note what is **not** in the second workflow: no `actions/checkout`, no `npm ci`, no repository

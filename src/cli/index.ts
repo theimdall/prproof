@@ -25,7 +25,7 @@ import { renderMarkdown } from '../core/render/markdown.js';
 import { renderTerminal } from '../core/render/terminal.js';
 import { RULES } from '../core/rules/registry.js';
 
-const VERSION = '0.1.1';
+const VERSION = '0.2.0';
 
 const USAGE = `prproof — evidence before merge
 
