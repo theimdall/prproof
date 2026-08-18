@@ -281,6 +281,7 @@ export function parseConfig(raw: unknown): Config {
         1,
         10_000_000,
       ),
+      exclude: reader.stringArray(limitsNode['exclude'], 'limits.exclude', defaults.limits.exclude),
     },
     tests: {
       requireTestChanges: reader.boolean(

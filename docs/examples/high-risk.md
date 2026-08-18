@@ -12,7 +12,7 @@
 | Build | ✅ Passed | build reported as success |
 | Tests | ❌ Failed | `npm test` exited with code 1. |
 | Lint | ⚠️ Warning | `npm run lint` exited with code 1. |
-| PR size | ⚠️ Warning | 35 files, +2,121 / -438 lines. |
+| PR size | ⚠️ Warning | 34 files, +1,321 / -398 lines. 1 generated file not counted. |
 | Test changes | ⚠️ Warning | 33 source files changed and no test file did. |
 | Dependencies | ⚠️ Warning | 1 new dependency detected. |
 | Duplicate PR | ⚠️ Warning | 1 open pull request appears to overlap with this one. |
@@ -61,10 +61,10 @@
 
 `PR001` · WARNING
 
-35 files, +2,121 / -438 lines.
+34 files, +1,321 / -398 lines. 1 generated file not counted.
 
-- 35 files changed (limit 20)
-- 2,559 lines changed (limit 1,000)
+- 34 files changed (limit 20)
+- 1,719 lines changed (limit 1,000)
 - Large pull requests take longer to review and hide defects. Consider splitting this into smaller, independently reviewable changes.
 
 #### ⚠️ Missing description
@@ -97,11 +97,11 @@ This pull request has no description, or only template boilerplate.
   -40  TEST001   Tests failed
   -15  TEST002   No test files changed
   -12  DUP001    Possible duplicate pull request
-  -12  PR001     Large pull request
   -12  PR002     Missing description
+  -10  PR001     Large pull request
    -6  LINT001   Lint failed
    -3  DEP001    New dependency added
-       (warning budget reached: 25 further points not applied)
+       (warning budget reached: 23 further points not applied)
   ---
    25  HIGH RISK
 ```

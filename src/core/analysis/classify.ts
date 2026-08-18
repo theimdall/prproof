@@ -90,6 +90,7 @@ function classifyWith(rawPath: string, matchers: Matchers): FileCategory {
 
 /** Splits the changed files of a pull request into the categories rules use. */
 export function classifyDiff(files: readonly ChangedFile[], config: Config): DiffClassification {
+  const isExcluded = createMatcher(config.limits.exclude);
   const matchers: Matchers = {
     isLock: createMatcher(config.dependencies.lockPatterns),
     isManifest: createMatcher(config.dependencies.manifestPatterns),
@@ -103,10 +104,21 @@ export function classifyDiff(files: readonly ChangedFile[], config: Config): Dif
   const dependencyFiles: string[] = [];
   const lockFiles: string[] = [];
   const otherFiles: string[] = [];
+  const excludedFiles: string[] = [];
 
   for (const file of files) {
     const path = normalisePath(file.path);
-    switch (classifyWith(path, matchers)) {
+    const category = classifyWith(path, matchers);
+
+    // Excluded files keep their identity — a lock file is still a lock file for
+    // DEP001 — but they are not source anyone should write a test for, and they
+    // do not count towards size.
+    if (isExcluded(path)) {
+      excludedFiles.push(path);
+      if (category === 'source' || category === 'test') continue;
+    }
+
+    switch (category) {
       case 'lock':
         lockFiles.push(path);
         break;
@@ -135,6 +147,10 @@ export function classifyDiff(files: readonly ChangedFile[], config: Config): Dif
     dependencyFiles,
     lockFiles,
     otherFiles,
-    documentationOnly: files.length > 0 && documentationFiles.length === files.length,
+    excludedFiles,
+    // Measured against the files that count, so a documentation change that
+    // also refreshes a lock file is still documentation-only.
+    documentationOnly:
+      documentationFiles.length > 0 && documentationFiles.length === files.length - excludedFiles.length,
   };
 }

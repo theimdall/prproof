@@ -36,6 +36,12 @@ lint:
 limits:
   max_changed_files: 20
   max_changed_lines: 1000
+  exclude: # lock files, by default
+    - '**/package-lock.json'
+    - '**/pnpm-lock.yaml'
+    - '**/yarn.lock'
+    - '**/go.sum'
+    - '**/Cargo.lock'
 
 tests:
   require_test_changes: true
@@ -101,6 +107,10 @@ what to configure.
 ### `limits`
 
 `max_changed_files` (1–100 000) and `max_changed_lines` (1–10 000 000). Additions plus deletions.
+
+`exclude` lists files that do not count towards the size and that `TEST002` does not expect
+tests for — generated bundles, vendored code, lock files. It defaults to the lock file patterns.
+Excluded files keep their identity everywhere else: a lock file is still reported by `DEP001`.
 
 ### `tests`
 

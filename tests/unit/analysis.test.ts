@@ -45,6 +45,23 @@ describe('file classification', () => {
     expect(result.documentationOnly).toBe(false);
   });
 
+  it('records excluded files without losing what they are', () => {
+    const result = classifyDiff(
+      [file('package-lock.json'), file('dist/index.js'), file('src/a.ts')],
+      config({ limits: { exclude: ['dist/**', '**/package-lock.json'] } }),
+    );
+    expect(result.excludedFiles).toEqual(['package-lock.json', 'dist/index.js']);
+    // Still a lock file, so DEP001 can report it.
+    expect(result.lockFiles).toEqual(['package-lock.json']);
+    // But not source anyone should write a test for.
+    expect(result.sourceFiles).toEqual(['src/a.ts']);
+  });
+
+  it('stays documentation-only when a lock file rides along', () => {
+    const result = classifyDiff([file('README.md'), file('package-lock.json')], DEFAULT_CONFIG);
+    expect(result.documentationOnly).toBe(true);
+  });
+
   it('normalises Windows separators', () => {
     expect(classifyPath('src\\session.test.ts', DEFAULT_CONFIG)).toBe('test');
   });

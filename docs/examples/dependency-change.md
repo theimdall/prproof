@@ -10,7 +10,7 @@
 | Build | ✅ Passed | build reported as success |
 | Tests | ✅ Passed | test reported as success |
 | Lint | ✅ Passed | lint reported as success |
-| PR size | ✅ Passed | 4 files, +305 / -42 lines. |
+| PR size | ✅ Passed | 3 files, +65 / -30 lines. 1 generated file not counted. |
 | Test changes | ✅ Passed | 1 test file changed alongside 1 source file. |
 | Dependencies | ⚠️ Warning | 1 new dependency detected. |
 | Duplicate PR | ✅ Passed | Compared against 0 open pull requests. |

@@ -15,6 +15,12 @@ lint:
 limits:
   max_changed_files: 30
   max_changed_lines: 1500
+  # GitHub Actions runs actions from a committed bundle, so dist/ is in version
+  # control. Its diff is five megabytes of generated output that nobody reads.
+  exclude:
+    - 'dist/**'
+    - 'report/dist/**'
+    - '**/package-lock.json'
 
 tests:
   require_test_changes: true
