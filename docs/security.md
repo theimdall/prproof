@@ -79,7 +79,7 @@ like a broken build.
 
 ### 6. The privileged job reads data, never code
 
-The reporting action (`theimdall/prproof/report@v0.1.0`) runs on `workflow_run` with
+The reporting action (`theimdall/prproof/report@v0.1.1`) runs on `workflow_run` with
 `pull-requests: write` and `checks: write`. It:
 
 - never checks out any repository,

@@ -89,7 +89,7 @@ jobs:
         run: npm test
         continue-on-error: true
 
-      - uses: theimdall/prproof@v0.1.0
+      - uses: theimdall/prproof@v0.1.1
         with:
           build-result: ${{ steps.build.outcome }}
           test-result: ${{ steps.test.outcome }}
@@ -116,7 +116,7 @@ PRProof runs **no commands at all**. It reads results that already exist: the ou
 in your workflow (as above), or check runs published for the head commit.
 
 ```yaml
-- uses: theimdall/prproof@v0.1.0
+- uses: theimdall/prproof@v0.1.1
   with:
     build-result: ${{ steps.build.outcome }}
     test-result: ${{ steps.test.outcome }}

@@ -1,6 +1,6 @@
 {
   "name": "prproof",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Evidence before merge. A deterministic pull request quality gate for GitHub.",
   "keywords": [
     "github-actions",
