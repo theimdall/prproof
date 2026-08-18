@@ -38,6 +38,30 @@ describe('PR001 pull request size', () => {
     expect(sizeFactor(10)).toBe(1);
   });
 
+  it('does not count generated files towards the size', () => {
+    // The case that made PRProof fail its own pull request: a committed bundle
+    // of half a million lines is a diff a reviewer scrolls past, not a large
+    // change to review.
+    const files = [
+      file('src/a.ts', { additions: 20, deletions: 5 }),
+      file('dist/index.js', { additions: 300_000, deletions: 280_000 }),
+    ];
+    const ctx = context({ config: { limits: { exclude: ['dist/**'] } }, files });
+    const result = prSizeRule.evaluate(ctx);
+
+    expect(result.status).toBe('passed');
+    expect(result.summary).toContain('1 file');
+    expect(result.summary).toContain('1 generated file not counted');
+  });
+
+  it('excludes lock files from the size by default', () => {
+    const files = [
+      file('src/a.ts', { additions: 5, deletions: 1 }),
+      file('package-lock.json', { additions: 4000, deletions: 3000 }),
+    ];
+    expect(prSizeRule.evaluate(context({ files })).status).toBe('passed');
+  });
+
   it('mentions truncation when the diff was cut short', () => {
     const files = Array.from({ length: 30 }, (_, index) => file(`src/file-${index}.ts`));
     const result = prSizeRule.evaluate(context({ files, truncated: true }));
@@ -152,6 +176,14 @@ describe('TEST002 test changes', () => {
 
   it('is skipped when the diff was truncated', () => {
     const ctx = context({ files: [file('src/session.ts')], truncated: true });
+    expect(testChangesRule.evaluate(ctx).status).toBe('skipped');
+  });
+
+  it('does not demand tests for generated source', () => {
+    const ctx = context({
+      config: { limits: { exclude: ['dist/**'] } },
+      files: [file('dist/index.js')],
+    });
     expect(testChangesRule.evaluate(ctx).status).toBe('skipped');
   });
 });

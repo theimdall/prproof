@@ -29,6 +29,12 @@ export interface CheckConfig {
 export interface LimitsConfig {
   readonly maxChangedFiles: number;
   readonly maxChangedLines: number;
+  /**
+   * Files that do not count towards size, and that no one is expected to write
+   * a test for. Generated bundles and lock files are diffs a reviewer scrolls
+   * past; counting them makes every dependency bump look like a rewrite.
+   */
+  readonly exclude: readonly string[];
 }
 
 export interface TestsConfig {
@@ -242,6 +248,7 @@ export const DEFAULT_CONFIG: Config = {
   limits: {
     maxChangedFiles: 20,
     maxChangedLines: 1000,
+    exclude: DEFAULT_LOCK_PATTERNS,
   },
   tests: {
     requireTestChanges: true,

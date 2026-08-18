@@ -90,7 +90,16 @@ overshoot — see [scoring.md](scoring.md#pr001-scales-with-the-overshoot).
 limits:
   max_changed_files: 20
   max_changed_lines: 1000
+  exclude:
+    - '**/package-lock.json' # lock files are excluded by default
+    - 'dist/**' # add your own generated output
 ```
+
+Files matching `limits.exclude` do not count towards the size, and `TEST002` does not expect
+tests for them. Lock files are excluded by default: a dependency bump that rewrites four
+thousand lines of `package-lock.json` is not a large pull request, and treating it as one is the
+fastest way to teach people to ignore this rule. A repository that commits a build artefact — as
+PRProof itself must, because GitHub Actions runs actions from a bundle — should add it here.
 
 If GitHub truncated the file list (it stops at 3000), the report says so: the real change is
 larger than what was measured.

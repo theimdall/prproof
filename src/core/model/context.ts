@@ -83,6 +83,8 @@ export interface DiffClassification {
   readonly dependencyFiles: readonly string[];
   readonly lockFiles: readonly string[];
   readonly otherFiles: readonly string[];
+  /** Files excluded by `limits.exclude`: generated output, lock files. */
+  readonly excludedFiles: readonly string[];
   /** True when the pull request touches nothing but documentation. */
   readonly documentationOnly: boolean;
 }

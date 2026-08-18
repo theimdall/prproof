@@ -32,17 +32,36 @@ export const prSizeRule: Rule = {
 
   evaluate(context: AnalysisContext): RuleResult {
     const { limits } = context.config;
-    const { changedFiles, additions, deletions, truncated } = context.diff;
+    const { truncated } = context.diff;
+
+    // Excluded files — generated bundles, lock files — are diffs a reviewer
+    // scrolls past. Counting them would make every dependency bump look like a
+    // rewrite, and a repository that commits a build artefact could never pass.
+    const excluded = new Set(context.classification.excludedFiles);
+    const counted = context.diff.files.filter((file) => !excluded.has(file.path));
+
+    const changedFiles = counted.length;
+    const additions = counted.reduce((sum, file) => sum + file.additions, 0);
+    const deletions = counted.reduce((sum, file) => sum + file.deletions, 0);
     const changedLines = additions + deletions;
 
     const fileOvershoot = changedFiles / limits.maxChangedFiles;
     const lineOvershoot = changedLines / limits.maxChangedLines;
     const overshoot = Math.max(fileOvershoot, lineOvershoot);
 
+    const excludedNote = excluded.size > 0 ? ` ${count(excluded.size, 'generated file')} not counted.` : '';
     const summary =
-      `${count(changedFiles, 'file')}, ` + `+${formatNumber(additions)} / -${formatNumber(deletions)} lines.`;
+      `${count(changedFiles, 'file')}, ` +
+      `+${formatNumber(additions)} / -${formatNumber(deletions)} lines.${excludedNote}`;
 
-    const data = { changedFiles, additions, deletions, changedLines, truncated };
+    const data = {
+      changedFiles,
+      additions,
+      deletions,
+      changedLines,
+      truncated,
+      excludedFiles: excluded.size,
+    };
 
     if (overshoot <= 1) {
       return passed(this, 'Pull request size is within limits', summary, { data });
