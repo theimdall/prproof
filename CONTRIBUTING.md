@@ -24,6 +24,12 @@ Useful commands:
 | `npm run demo`       | Regenerate `docs/examples/*.md` from the scenario fixtures |
 | `npm run package`    | Build the library and bundle both actions into `dist/`     |
 
+`dist/` is committed, because GitHub Actions runs JavaScript actions from a bundle rather than
+from source. It is built with esbuild rather than ncc for one reason: ncc assigns module ids in
+filesystem-walk order, so Windows and Linux produced byte-different bundles from identical
+source and the CI freshness check could never pass for everyone. esbuild emits the same bytes on
+every platform.
+
 ## The shape of the codebase
 
 ```text
